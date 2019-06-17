@@ -1,13 +1,13 @@
 <?php
     function simpleCrypt( $string, $action = 'e' ) {
-        // you may change these values to your own
-        $secret_key = 'my_simple_secret_key';
-        $secret_iv = 'my_simple_secret_iv';
+        // this is the encryption function
+        $secretKey1 = 'my_simple_secret_key'; // this is the key
+        $secretIv1 = 'my_simple_secret_iv'; // this is the initial value which is kinda used as a salt
      
         $output = false;
         $encrypt_method = "AES-256-CBC";
-        $key = hash( 'sha256', $secret_key );
-        $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+        $key = hash( 'sha256', $secretKey1 ); // SHA II encryption method
+        $iv = substr( hash( 'sha256', $secretIv1 ), 0, 16 ); // encrypting the initial value
      
         if( $action == 'e' ) {
             $output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
@@ -15,21 +15,17 @@
         else if( $action == 'd' ){
             $output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
         }
-     
-        return $output;
+             return $output;
     }
-    
     //encryption function
    function encrypt(){
         date_default_timezone_set('GMT');
         $now = date('m/d/Y h:i:s a', time());
-    
-        $oneMoreHourFromNow = date('Y-m-d H:i',strtotime('+3 hour',strtotime($now)));
-        $token = strtotime($oneMoreHourFromNow); // //token generated from normal time to the unix time
-    
-        return simpleCrypt($token, 'e'); 
+        $oneMoreHourFromNow = date('Y-m-d H:i',strtotime('+2 hour +5 seconds',strtotime($now)));
+        $token = strtotime($oneMoreHourFromNow);  //token generated from normal time to the unix time
+        return simpleCrypt($token, 'e'); // token encrypted
    }
-
+   
    function decrypt($token){
     return simpleCrypt($token, 'd');
    }
