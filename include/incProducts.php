@@ -36,6 +36,7 @@
     return simpleCrypt($token, 'd');
    }
 
+//    get list of all products
 function get_products() {
     require_once 'incDbh.php';
     $sqlquery = "SELECT * FROM tbl_product";
@@ -70,6 +71,7 @@ HTML;
     }
 }
 
+// Get detail of product by id
 function get_product_detail() {
     require 'incDbh.php';
     // require 'helper.php';

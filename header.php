@@ -26,6 +26,7 @@
               if (session_status() == PHP_SESSION_NONE) {
                   session_start();
               }
+              // if user login, set session duration to 4 hours
               $hour = 3600;
               if (isset($_SESSION['id']) && (time() - $_SESSION['login_time'] > 4*$hour)) {
                 session_destroy();

@@ -33,7 +33,7 @@
    function decrypt($token){
     return simpleCrypt($token, 'd');
    }
-
+// show the cart list
     function show_cart() {
         // session_start();
         require 'incDbh.php';
@@ -102,7 +102,7 @@ HTML;
 
     require 'incDbh.php';
 
-
+// update basket, params = product id, amount and user id
     function update_basket($product_id, $amount, $user_id) {
         require 'incDbh.php';
         $sqlquery = "UPDATE tbl_basket SET amount = ? WHERE product_id = ? AND user_id = ? AND order_id IS NULL";
@@ -118,6 +118,7 @@ HTML;
         }
     }
 
+    // add new product to basket
     function add_basket($product_id, $amount, $user_id) {
         require 'incDbh.php';
         $sqlquery = "SELECT * FROM tbl_basket WHERE product_id = ? AND user_id = ? AND order_id IS NULL";
@@ -152,6 +153,7 @@ HTML;
         }
     }
 
+    // delete product from basket
     function delete_basket($product_id, $user_id) {
         require 'incDbh.php';
         $sqlquery = "DELETE FROM tbl_basket WHERE product_id = ? AND user_id = ? AND order_id IS NULL";
@@ -214,7 +216,7 @@ HTML;
                                     if (session_status() == PHP_SESSION_NONE) {
                                         session_start();
                                     }
-                                    //if loggin
+                                    //if loggin, add no database
                                     if (isset($_SESSION['id'])) {
                                         $new_value = $quantity;
                                         if(isset($_SESSION['cart_' . $id])) {
@@ -225,6 +227,7 @@ HTML;
                                         $_SESSION['cart_' . $id] = $new_value;
                                     }
                                     else {
+                                        // if not, work with cookie
                                         if(isset($_COOKIE['cart_' . $id])) {
                                             // $_SESSION['cart_' . $id] = 0;
                                             $new_value = $_COOKIE['cart_' . $id] + $quantity;
@@ -280,10 +283,12 @@ HTML;
                                         session_start();
                                     }
                                     if (isset($_SESSION['id'])) {
+                                        // if user login, update with database
                                         update_basket($id, $quantity, (int) $_SESSION['id']);
                                         $_SESSION['cart_' . $id] = $quantity;
                                     }
                                     else {
+                                        // if not, update new cookie
                                         setcookie("cart_" . $id, $quantity, time() + (86400 * 30), "/");
                                     }
                                     header("Location: ../webshop/cart.php");
@@ -307,12 +312,14 @@ HTML;
                     if (session_status() == PHP_SESSION_NONE) {
                         session_start();
                     }
+                    // if user login, remove from database
                     if (isset($_SESSION['id'])) {
                         delete_basket($id, (int) $_SESSION['id']);
                         $key = 'cart_' . $_GET["product"];
                         unset($_SESSION[$key]);
                     }
                     else {
+                        // if not, remove from cookie
                         $key = 'cart_' . $_GET["product"];
                         unset($_COOKIE[$key]);
                         setcookie($key, null, time() - 3600, '/');
