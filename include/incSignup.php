@@ -36,7 +36,7 @@
     }
     else
     {
-      $sqlquery = "SELECT name FROM tbl_users WHERE name=?";
+      $sqlquery = "SELECT * FROM tbl_users WHERE name=? OR email=?";
       $stmt = mysqli_stmt_init($connection);
 
       if(!$stmt->prepare($sqlquery))
@@ -45,13 +45,13 @@
         exit();
       }
       else{
-        $stmt->bind_param("s", $username);
+        $stmt->bind_param("ss", $username, $email);
         $stmt->execute();
         $stmt->store_result();
         $resultCheck = $stmt->num_rows();
         if($resultCheck>0)
         {
-          header("Location: ../signup.php?usertaken&mail=".$email);
+          header("Location: ../signup.php?error=usertaken&email=".$email);
           exit();
         }
         else
@@ -66,7 +66,7 @@
             $hashedPwd = password_hash($password, PASSWORD_DEFAULT);
             $stmt->bind_param("sss", $username, $email, $hashedPwd);
             $stmt->execute();
-            header("Location: ../signup.php?signup=success");
+            header("Location: ../index.php");
             exit();
           }
         }
